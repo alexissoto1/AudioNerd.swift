@@ -1,7 +1,7 @@
 # AudioNerd.swift
 Audio software using Swift and Csound 
 
-1. If_Synthetizer: 
+1.If_Synthetizer: 
 
 2.s0und!:
 
