@@ -12,6 +12,7 @@ nchnls    = 2
 
 garvb        init        0
 
+maxalloc 2, 5
 
 instr 1
 
@@ -40,6 +41,16 @@ a1 = asig * kvol
 outs a1 + adL*kdst + adel, a1 + adL*kdst + adel
 endin
 
+instr 2
+kamp chnget "level"
+kamp port kamp, .001
+kamp /= 5
+kenv        linsegr        0,          .001,         1,      .01,     1,     .1, 0
+asig loscil kenv, cpsmidinn(p4), 2, 65.41, p6
+outs      asig*kamp, asig*kamp
+endin
+
+
 instr 100
 kfb chnget "reverb"
 kfb port kfb, .001
@@ -51,6 +62,11 @@ endin
 </CsInstruments>
 <CsScore>
 
+f0 z
+
+f2  0    0   1 "WAVs/choir.wav"          0 0 0
+
 </CsScore>
 </CsoundSynthesizer>
+
 

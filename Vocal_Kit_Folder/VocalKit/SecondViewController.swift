@@ -18,7 +18,6 @@ class SecondViewController: UIViewController {
     @IBOutlet var volValue: UILabel!
     
     // Declarations
-    var file = 0
     var loop = true
     
     //Pointers
@@ -35,18 +34,12 @@ class SecondViewController: UIViewController {
         super.viewDidLoad()
         
         csound.addBinding(self)
+        
         csound.play(Bundle.main.path(forResource:"VocalHarmonizer", ofType: "csd")) 
         
         [volumeSlider, reverbSlider].forEach { ValueChanged($0) }
         
         volumeSlider.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi/2))
-        
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        csound.sendScore("i-1 0 1")
-        csound.sendScore("i2  0  -1")
-        csound.sendScore("i-3 0 1")
         
     }
     
@@ -81,12 +74,12 @@ extension SecondViewController: CsoundBinding{
 
 extension SecondViewController: CsoundVirtualKeyboardDelegate {
     func keyUp(_ keybd: CsoundVirtualKeyboard, keyNum: Int) {
-        let score = String(format: "i-2.%.3d 0 1 %d %d %d", keyNum, keyNum + 60, file + 2, loop.toInt())
+        let score = String(format: "i-2.%.3d 0 1 %d %d", keyNum, keyNum + 60, loop.toInt())
         csound.sendScore(score)
     }
 
     func keyDown(_ keybd: CsoundVirtualKeyboard, keyNum: Int) {
-        let score = String(format: "i2.%.3d 0 -1 %d %d %d", keyNum, keyNum + 60, file + 2, loop.toInt())
+        let score = String(format: "i2.%.3d 0 -1 %d %d", keyNum, keyNum + 60, loop.toInt())
         csound.sendScore(score)
     }
     
