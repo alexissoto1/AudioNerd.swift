@@ -61,7 +61,7 @@ class FirstViewController: UIViewController {
 
         VolumeSlider.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi/2))
         
-        view.backgroundColor = UIColor.lightGray
+        view.backgroundColor = UIColor.black
     }
     
     override func viewDidAppear(_ animated: Bool){

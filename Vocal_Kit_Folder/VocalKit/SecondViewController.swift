@@ -70,7 +70,12 @@ class SecondViewController: UIViewController {
         }
     }
     
+    lazy var sliderToLabel1: [UISlider: UILabel] = [reverbSlider: verbValue, volumeSlider: volValue, compSlider: compValue]
+    
     @IBAction func ValueChanged(_ sender: UISlider){
+        if let label = sliderToLabel1[sender] {
+            label.text = String(format: "%.2f", sender.value)
+        }
         switch sender{
         case volumeSlider: level = sender.value
         case reverbSlider: reverb = sender.value
