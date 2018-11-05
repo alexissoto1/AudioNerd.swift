@@ -11,7 +11,7 @@ nchnls    = 2
 0dbfs	  = 1.0
 
 garvb        init        0
-garvb1       init       0
+garvb1      init        0
 
 instr 1
 
@@ -50,9 +50,9 @@ a3 = asig3*kgain
 
 acomp compress a2, a3, 0, 40, 60, 3, 0.1, .5, .92
 
+garvb1 += a2
+garvb1 += a3
 
-a2 += garvb1
-a3 += garvb1
 outs a2 + acomp*kcomp, a3 + acomp*kcomp
 endin
 
@@ -81,22 +81,3 @@ endin
 
 </CsScore>
 </CsoundSynthesizer>
-
-
-<bsbPanel>
- <label>Widgets</label>
- <objectName/>
- <x>100</x>
- <y>100</y>
- <width>320</width>
- <height>240</height>
- <visible>true</visible>
- <uuid/>
- <bgcolor mode="nobackground">
-  <r>255</r>
-  <g>255</g>
-  <b>255</b>
- </bgcolor>
-</bsbPanel>
-<bsbPresets>
-</bsbPresets>

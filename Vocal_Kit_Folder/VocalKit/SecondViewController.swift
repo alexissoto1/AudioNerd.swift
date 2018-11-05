@@ -70,12 +70,12 @@ class SecondViewController: UIViewController {
     }
     
     @IBAction func OnOff1(_ sender: UISwitch){
-        if OnOffSwitch.isOn == false {
-            csound.sendScore("i-2 0 1")
-            csound.sendScore("i-101 0 1")
-        }else{
+        if OnOffSwitch.isOn == true {
             csound.sendScore("i2 0 -1")
             csound.sendScore("i101 0 -1")
+        }else{
+            csound.sendScore("i-2 0 1")
+            csound.sendScore("i-101 0 1")
         }
     }
     

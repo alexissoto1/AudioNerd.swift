@@ -70,12 +70,12 @@ class FirstViewController: UIViewController {
     }
     
     @IBAction func OnOff(_ sender:UISwitch){
-        if VSlider.isOn == false{
-            csound.sendScore("i-1 0 1")
-            csound.sendScore("i-100 0 1")
-        }else{
+        if VSlider.isOn == true{
             csound.sendScore("i1 0.1 -1")
             csound.sendScore("i100 0 -1")
+        }else{
+            csound.sendScore("i-1 0 1")
+            csound.sendScore("i-100 0 1")
         }
     }
     
