@@ -23,6 +23,8 @@ class SecondViewController: UIViewController {
     
     @IBOutlet var OnOffSwitch: UISwitch!
     
+    @IBOutlet var statusLabel: UILabel!
+    
     //Buttons
     @IBOutlet var RecordButton: UIButton!
     @IBOutlet var PlayButton: UIButton!
@@ -94,33 +96,34 @@ class SecondViewController: UIViewController {
         }
     }
     
+    func recordingURL() -> URL {
+        let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        return docDirPath.appendingPathComponent("Recorded.wav")
+    }
+    
     @IBAction func startRecording(_ sender: UIButton){
-        print("Recording")
+        csound.record(to: recordingURL())
+        statusLabel.text = String("Recording...")
     }
     
     @IBAction func stopRecording(_ sender: UIButton){
-//        Player.stop()
-//        Player.currentTime = 0
-//        sender.removeTarget(self, action: #selector(stop(_:)), for: .touchUpInside)
-//        sender.addTarget(self, action: #selector(play(_:)), for: .touchUpInside)
-//        sender.setTitle("Play", for: .normal)
-        print("Stop")
+        csound.stopRecording()
+        do {
+            Player = try AVAudioPlayer(contentsOf: recordingURL())
+        } catch {
+            print(error.localizedDescription)
+            }
+        
+        Recorded = true
+        statusLabel.text = String("Recording stopped")
         }
     
     @IBAction func Playback(_ sender: UIButton){
-//        if Recorded {
-//            Player.prepareToPlay()
-//            Player.play()
-//            sender.removeTarget(self, action: #selector(play(_:)), for: .touchUpInside)
-//            sender.addTarget(self, action: #selector(stop(_:)), for: .touchUpInside)
-//            sender.setTitle("Stop", for: .normal)
-//        }
-        print("Playback")
-    }
-    
-    func recordingURL() -> URL {
-        let docDirPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        return docDirPath.appendingPathComponent("recording.wav")
+        if Recorded {
+            Player.prepareToPlay()
+            Player.play()
+        }
+        statusLabel.text = String("Playing back")
     }
 }
 
