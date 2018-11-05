@@ -42,13 +42,18 @@ endin
 
 instr 2
 kgain chnget "gain"
+kcomp chnget "comp"
+
 asig2, asig3 ins
 a2 = asig2*kgain
 a3 = asig3*kgain
 
+acomp compress a2, a3, 0, 40, 60, 3, 0.1, .5, .92
+
+
 a2 += garvb1
 a3 += garvb1
-outs a2, a3
+outs a2 + acomp*kcomp, a3 + acomp*kcomp
 endin
 
 
@@ -59,7 +64,6 @@ arL, arR    reverbsc    garvb, garvb, kfb, 10000
 outs        arL*.3, arR*.3
 clear   garvb
 endin
-
 
 
 instr 101
@@ -79,3 +83,20 @@ endin
 </CsoundSynthesizer>
 
 
+<bsbPanel>
+ <label>Widgets</label>
+ <objectName/>
+ <x>100</x>
+ <y>100</y>
+ <width>320</width>
+ <height>240</height>
+ <visible>true</visible>
+ <uuid/>
+ <bgcolor mode="nobackground">
+  <r>255</r>
+  <g>255</g>
+  <b>255</b>
+ </bgcolor>
+</bsbPanel>
+<bsbPresets>
+</bsbPresets>

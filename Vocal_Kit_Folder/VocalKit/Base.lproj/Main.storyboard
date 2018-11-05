@@ -178,7 +178,7 @@
             </objects>
             <point key="canvasLocation" x="750" y="-320.3125"/>
         </scene>
-        <!--Vocal Synth-->
+        <!--Vocal Recording-->
         <scene sceneID="wg7-f3-ORb">
             <objects>
                 <viewController id="8rJ-Kc-sve" customClass="SecondViewController" customModule="VocalKit" customModuleProvider="target" sceneMemberID="viewController">
@@ -263,7 +263,7 @@
                                 <color key="textColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0.00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0xN-f2-P4w">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Value" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0xN-f2-P4w">
                                 <rect key="frame" x="793" y="466" width="140" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
@@ -285,23 +285,44 @@
                                     <color key="titleColor" red="1" green="0.0" blue="0.29411764705882354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <color key="titleShadowColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </state>
+                                <connections>
+                                    <action selector="startRecording:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="HRN-k0-jnT"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XJd-yA-G8x">
-                                <rect key="frame" x="683" y="582" width="51" height="42"/>
+                                <rect key="frame" x="686" y="582" width="51" height="42"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
                                 <state key="normal" title="Play">
                                     <color key="titleColor" red="1" green="0.5725490196078431" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </state>
+                                <connections>
+                                    <action selector="Playback:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="Yd8-Ym-Dpg"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cpi-tf-nVA">
+                                <rect key="frame" x="492" y="582" width="56" height="42"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
+                                <state key="normal" title="Stop">
+                                    <color key="titleColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </state>
+                                <connections>
+                                    <action selector="stopRecording:" destination="8rJ-Kc-sve" eventType="touchUpInside" id="V8O-5T-aRp"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="O1u-W8-tvY"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Vocal Synth" image="second" id="cPa-gy-q4n"/>
+                    <tabBarItem key="tabBarItem" title="Vocal Recording" image="second" id="cPa-gy-q4n"/>
                     <connections>
                         <outlet property="OnOffSwitch" destination="AOz-gh-9Eg" id="qaG-ko-e2T"/>
+                        <outlet property="PlayButton" destination="XJd-yA-G8x" id="3gy-nj-9Ff"/>
+                        <outlet property="RecordButton" destination="GqO-XA-N7e" id="ggQ-UI-Iww"/>
+                        <outlet property="StopButton" destination="cpi-tf-nVA" id="ha1-vb-Vik"/>
                         <outlet property="compSlider" destination="mZb-Hp-ebg" id="vKr-Xq-lTl"/>
                         <outlet property="compValue" destination="0xN-f2-P4w" id="ZNz-rd-q17"/>
                         <outlet property="reverbSlider" destination="SQw-AE-bpQ" id="fac-Ka-fZp"/>

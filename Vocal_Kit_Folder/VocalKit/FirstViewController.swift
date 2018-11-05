@@ -110,7 +110,7 @@ extension FirstViewController: CsoundBinding {
         disPtr = csoundObj.getInputChannelPtr("distortion", channelType: CSOUND_CONTROL_CHANNEL)
         filtPtr = csoundObj.getInputChannelPtr("ratio", channelType: CSOUND_CONTROL_CHANNEL)
     }
-    
+
     func updateValuesToCsound() {
         verbPtr?.pointee = verb
         harPtr?.pointee = harmony
