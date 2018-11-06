@@ -58,7 +58,6 @@ class SecondViewController: UIViewController {
         
         csound.play(Bundle.main.path(forResource:"VocalHarmonizer", ofType: "csd"))
         
-        
         [volumeSlider, reverbSlider, compSlider].forEach { ValueChanged($0) }
         
         volumeSlider.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi/2))
@@ -69,6 +68,11 @@ class SecondViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         csound.sendScore("i-1 0 1")
         csound.sendScore("i-100 0 1")
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        csound.stopRecording()
+        statusLabel.text = ""
     }
     
     @IBAction func OnOff1(_ sender: UISwitch){
@@ -103,7 +107,7 @@ class SecondViewController: UIViewController {
     
     @IBAction func startRecording(_ sender: UIButton){
         csound.record(to: recordingURL())
-        statusLabel.text = String("Recording...")
+        statusLabel.text = "Recording..."
     }
     
     @IBAction func stopRecording(_ sender: UIButton){
@@ -115,15 +119,17 @@ class SecondViewController: UIViewController {
             }
         
         Recorded = true
-        statusLabel.text = String("Recording stopped")
+        statusLabel.text = "Recording stopped"
         }
     
     @IBAction func Playback(_ sender: UIButton){
         if Recorded {
             Player.prepareToPlay()
+            Player.enableRate = true //Enable rate true
+            Player.rate = 2.0 //Fix bug of playing half slower.
             Player.play()
         }
-        statusLabel.text = String("Playing back")
+        statusLabel.text = "Playing back"
     }
 }
 

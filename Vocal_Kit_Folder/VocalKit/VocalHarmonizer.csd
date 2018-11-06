@@ -5,7 +5,7 @@
 </CsOptions>
 <CsInstruments>
 
-sr        = 44100
+sr        = 44000
 ksmps     = 64
 nchnls    = 2
 0dbfs	  = 1.0
@@ -50,6 +50,8 @@ a3 = asig3*kgain
 
 acomp compress a2, a3, 0, 40, 60, 3, 0.1, .5, .92
 
+;acomp dam a2, 0.2, 0.8, 0.2, 0.01, 0.5
+
 garvb1 += a2
 garvb1 += a3
 
@@ -67,9 +69,9 @@ endin
 
 
 instr 101
-kfb chnget "reverb1"
-kfb port kfb, .001
-arL, arR    reverbsc    garvb, garvb, kfb, 10000
+kverb chnget "reverb1"
+kverb port kverb, .001
+arL, arR    reverbsc    garvb, garvb, kverb, 10000
 outs        arL*.3, arR*.3
 clear   garvb1
 endin
@@ -77,7 +79,6 @@ endin
 
 </CsInstruments>
 <CsScore>
-
 
 </CsScore>
 </CsoundSynthesizer>
