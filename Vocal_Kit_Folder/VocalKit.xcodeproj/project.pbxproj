@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		780F8C342194A73500EF3511 /* CsoundiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 782F3ADA2187537B001010F3 /* CsoundiOS.framework */; };
+		780F8C352194A73500EF3511 /* CsoundiOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 782F3ADA2187537B001010F3 /* CsoundiOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		782F3AC621875349001010F3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782F3AC521875349001010F3 /* AppDelegate.swift */; };
 		782F3AC821875349001010F3 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782F3AC721875349001010F3 /* FirstViewController.swift */; };
 		782F3ACA21875349001010F3 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782F3AC921875349001010F3 /* SecondViewController.swift */; };
@@ -17,6 +19,20 @@
 		78AADA9C21879665007AF666 /* VocalHarmonizer.csd in Resources */ = {isa = PBXBuildFile; fileRef = 78AADA9B21879665007AF666 /* VocalHarmonizer.csd */; };
 		78AADAA021879DC7007AF666 /* SharedInstances.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AADA9F21879DC7007AF666 /* SharedInstances.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		780F8C362194A73500EF3511 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				780F8C352194A73500EF3511 /* CsoundiOS.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		782F3AC221875349001010F3 /* VocalKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VocalKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -37,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				780F8C342194A73500EF3511 /* CsoundiOS.framework in Frameworks */,
 				782F3ADB2187537B001010F3 /* CsoundiOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -87,6 +104,7 @@
 				782F3ABE21875349001010F3 /* Sources */,
 				782F3ABF21875349001010F3 /* Frameworks */,
 				782F3AC021875349001010F3 /* Resources */,
+				780F8C362194A73500EF3511 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -229,7 +247,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -284,7 +302,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -310,7 +328,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.AlexisSoto.VocalKit;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.AlexisSoto.VocalKit-Soto";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -333,7 +351,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.AlexisSoto.VocalKit;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.AlexisSoto.VocalKit-Soto";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
