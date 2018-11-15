@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  motionSynth
 //
-//  Created by Nikhil Singh on 12/21/17. Edited by Alexis Soto.
+//  Created by Nikhil Singh on 12/21/17. Edited by Alexis Soto on 11/14/18.
 //  Copyright © 2018 Berklee EP-P453. All rights reserved.
 //
 
@@ -45,11 +45,6 @@ class ViewController: UIViewController {
         
         guard let accData = accelerometerData else { return } //CHeck if accelerometer existed. if not, do not proceed.
         
-//////////////////////////////
-        var hue = Double(accData.acceleration.x)
-        hue -= floor(hue)
-/////////////////////////////
-
         // Place outer bounds on the location of generated UIView objects
         var x = (CGFloat(accData.acceleration.x) * self.view.frame.size.width) + self.view.center.x
         var y = (CGFloat(accData.acceleration.y * -0.5) * self.view.frame.size.height) + self.view.center.y
@@ -86,8 +81,6 @@ class ViewController: UIViewController {
             let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
             alert.addAction(defaultAction)
             present(alert, animated: true, completion: nil)
-            
-            timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.updateHue), userInfo: nil, repeats: true)
             return
         }
         
@@ -139,15 +132,18 @@ class ViewController: UIViewController {
         }
     }
     
+    //Timer interface is within Objective C
     @objc func updateHue() {
         guard let accData = motionManager?.accelerometerData else { return }
-        hue = accData.acceleration.x
-        print(hue)
+        hue = Double(accData.acceleration.x)
+        hue -= floor(hue)
+        view.backgroundColor = UIColor(hue: CGFloat(hue), saturation: 1, brightness: 1, alpha: 1)
     }
 }
 
 extension ViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.updateHue), userInfo: nil, repeats: true)
         // For each touch in the touches set
         for touch in touches {
             let touchID = getTouchIDAssignment()
@@ -165,8 +161,6 @@ extension ViewController {
                 
                 //-2 will work in this case for instrument play lenght.
                 csound.sendScore(String(format: "i1 0 -2", InsNumb))
-                self.view.backgroundColor = UIColor(hue: CGFloat(hue), saturation: 1, brightness: 1, alpha: 1)
-                //view.backgroundColor = UIColor.red
                 tCount += touches.count
                 Numtouches.text = String(format: "Touches: %d", tCount)
             }
@@ -183,6 +177,7 @@ extension ViewController {
                 self.view.backgroundColor = UIColor.white
             }
         }
+        timer.invalidate()
     }
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
@@ -193,6 +188,7 @@ extension ViewController {
                 csound.sendScore(String(format: "i-1 0 1", InsNumb))
             }
         }
+        timer.invalidate()
     }
     
     // Assigning touch ID numbers
