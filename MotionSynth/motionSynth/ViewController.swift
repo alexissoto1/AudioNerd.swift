@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  motionSynth
 //
-//  Created by Nikhil Singh on 12/21/17. Edited by Alexis Soto on 11/14/18.
+//  Created by Nikhil Singh on 12/21/17. 
 //  Copyright © 2018 Berklee EP-P453. All rights reserved.
 //
 
@@ -30,7 +30,7 @@ class ViewController: UIViewController {
     @IBOutlet var Numtouches: UILabel!
     
     //Instrument number
-    var InsNumb = 0
+    var InsNumb = 1
     
     //color
     var hue = 0.0
@@ -123,12 +123,12 @@ class ViewController: UIViewController {
     
     //Switch function
     @IBAction func OnOfffunc (_ sender: UISwitch){
-    if OnOff.isOn == true{
-        InsNumb = 2
-        csound.sendScore("i-1 0 1")
-    }else{
+    if OnOff.isOn == false{
         InsNumb = 1
-        csound.sendScore("i-2 0 1")
+        csound.sendScore("i-2 0 0")
+    }else{
+        InsNumb = 2
+        csound.sendScore("i-1 0 0")
         }
     }
     
@@ -160,7 +160,7 @@ extension ViewController {
                 touchYPtr[touchID]?.pointee = touchY[touchID]
                 
                 //-2 will work in this case for instrument play lenght.
-                csound.sendScore(String(format: "i1 0 -2", InsNumb))
+                csound.sendScore(String(format: "i%d 0 -2", InsNumb))
                 tCount += touches.count
                 Numtouches.text = String(format: "Touches: %d", tCount)
             }
@@ -173,7 +173,7 @@ extension ViewController {
             if touchID != -1 {
                 touchIDs[touchID] = 0
                 touchArray[touchID] = nil
-                csound.sendScore(String(format: "i-1 0 1", InsNumb))
+                csound.sendScore(String(format: "i%d 0 0", InsNumb))
                 self.view.backgroundColor = UIColor.white
             }
         }
@@ -185,7 +185,7 @@ extension ViewController {
             if touchID != -1 {
                 touchIDs[touchID] = 0
                 touchArray[touchID] = nil
-                csound.sendScore(String(format: "i-1 0 1", InsNumb))
+                csound.sendScore(String(format: "i%d 0 0", InsNumb))
             }
         }
         timer.invalidate()
