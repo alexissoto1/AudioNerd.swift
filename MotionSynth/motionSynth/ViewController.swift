@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  motionSynth
 //
-//  Created by Nikhil Singh on 12/21/17. 
+//  Created by Nikhil Singh on 12/21/17. Edited by Alexis Soto on 11/14/18.
 //  Copyright © 2018 Berklee EP-P453. All rights reserved.
 //
 
