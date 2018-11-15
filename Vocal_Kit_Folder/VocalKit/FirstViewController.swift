@@ -66,6 +66,8 @@ class FirstViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool){
         csound.sendScore("i-2 0 1")
+        csound.sendScore("i3 0 1")
+        csound.sendScore("i4 0 1")
         csound.sendScore("i-101 0 1")
     }
     

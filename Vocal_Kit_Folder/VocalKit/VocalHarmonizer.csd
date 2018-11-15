@@ -49,7 +49,6 @@ a2 = asig2*kgain
 a3 = asig3*kgain
 
 acomp compress a2, a3, 0, 40, 60, 3, 0.1, .5, .92
-
 ;acomp dam a2, 0.2, 0.8, 0.2, 0.01, 0.5
 
 garvb1 += a2
@@ -58,6 +57,14 @@ garvb1 += a3
 outs a2 + acomp*kcomp, a3 + acomp*kcomp
 endin
 
+
+instr 3
+clear garvb
+endin
+
+instr 4
+clear garvb1
+endin
 
 instr 100
 kfb chnget "reverb"
