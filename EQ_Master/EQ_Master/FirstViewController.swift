@@ -21,7 +21,7 @@ class FirstViewController: UIViewController {
     var audioUnitEQ = AVAudioUnitEQ(numberOfBands: 10)
     var isPlaying = false
     
-    var reverb : AVAudioUnitReverb!
+    var reverb : AVAudioUnitReverb! //Testing purposes
     
     //EQ main buttons
     @IBOutlet var bypassSwitch : UISwitch!
@@ -68,10 +68,6 @@ class FirstViewController: UIViewController {
     var timer: Timer!
     var filter_timer: Timer!
     private var volume = 0.0
-
-    var Player = AVAudioPlayer()
-    var audioPlayer: AudioPlayer!
-    
     
     @IBOutlet var dBlabel : UILabel!
 
@@ -80,20 +76,23 @@ class FirstViewController: UIViewController {
         super.viewDidLoad()
         
         AudiorRecorder = AudioRecorder()
-        audioPlayer = AudioPlayer()
+
         
         filter_timer = Timer.scheduledTimer(timeInterval: 1/30, target: self, selector: #selector(self.updateGain), userInfo: nil, repeats: true)
         
+        //Audio engine testing purposes
+        self.audioEngine.attach(self.reverb)
         reverb = AVAudioUnitReverb()
         reverb.loadFactoryPreset(.largeHall)
         reverb.wetDryMix = 100
+        //Up to here
         
         self.audioEngine = AVAudioEngine.init()
         self.audioPlayerNode = AVAudioPlayerNode.init()
         self.audioUnitEQ = AVAudioUnitEQ(numberOfBands: 10)
         self.audioEngine.attach(self.audioPlayerNode)
         self.audioEngine.attach(self.audioUnitEQ)
-        self.audioEngine.attach(self.reverb)
+
         
         for i in 0...9 {
             let PASS = self.value(forKey: String(format: "Band%d", i+1)) as! UISlider
@@ -125,7 +124,6 @@ class FirstViewController: UIViewController {
         })
         
         start()
-        //audioUnitEQ.bypass = bypassSwitch.isOn 
     }
     
     @objc func updateMeter() {
@@ -169,7 +167,7 @@ class FirstViewController: UIViewController {
         if sender.isOn == true {
             record()
         }else{
-            stopRec() //From here these are the problematic lines of code. Saving the info nowhere!
+            stopRec()
         }
     }
     

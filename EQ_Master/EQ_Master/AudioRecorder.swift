@@ -13,15 +13,14 @@ class AudioRecorder: NSObject {
     
     var recorder:AVAudioRecorder!
     var fileURL:URL!
-    var timer:Timer!
-    var curTime = ""
+    private var timer:Timer!
+    private var curTime = ""
     var volume = 0.0
     
     func setup(){
         setRecordingPath()
         
         let settings : [String: Any] = [
-            //AVFormatIDKey: kAudioFormatAppleLossless,
             AVEncoderAudioQualityKey: AVAudioQuality.max.rawValue,
             AVEncoderBitRateKey: 24000,
             AVNumberOfChannelsKey: 2,

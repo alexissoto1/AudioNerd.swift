@@ -6,8 +6,6 @@
 //  Copyright © 2018 Alexis Soto. All rights reserved.
 //
 
-
-
 //Parametric EQ, FFT inclussion
 
 import UIKit
