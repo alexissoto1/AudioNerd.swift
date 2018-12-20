@@ -21,6 +21,8 @@ class FirstViewController: UIViewController {
     var audioUnitEQ = AVAudioUnitEQ(numberOfBands: 10)
     var isPlaying = false
     
+    var reverb : AVAudioUnitReverb!
+    
     //EQ main buttons
     @IBOutlet var bypassSwitch : UISwitch!
     @IBOutlet var gainSlider : UISlider!
@@ -59,12 +61,13 @@ class FirstViewController: UIViewController {
     @IBOutlet var LabelB16k : UILabel!
     
     //Slider to Label
-    lazy var SliderToLabel : [UISlider: UILabel] = [Band1 : LabelB31, Band2 : LabelB62, Band3 : LabelB125, Band4 : LabelB250, Band5 : LabelB500, Band6 : LabelB1k, Band7 : LabelB2k, Band8 : LabelB4k, Band9 : LabelB8k, Band10 : LabelB16k]
+    private lazy var SliderToLabel : [UISlider: UILabel] = [Band1 : LabelB31, Band2 : LabelB62, Band3 : LabelB125, Band4 : LabelB250, Band5 : LabelB500, Band6 : LabelB1k, Band7 : LabelB2k, Band8 : LabelB4k, Band9 : LabelB8k, Band10 : LabelB16k]
     
     //Audio
     var AudiorRecorder: AudioRecorder!
     var timer: Timer!
-    var volume = 0.0
+    var filter_timer: Timer!
+    private var volume = 0.0
 
     var Player = AVAudioPlayer()
     var audioPlayer: AudioPlayer!
@@ -79,38 +82,64 @@ class FirstViewController: UIViewController {
         AudiorRecorder = AudioRecorder()
         audioPlayer = AudioPlayer()
         
+        filter_timer = Timer.scheduledTimer(timeInterval: 1/30, target: self, selector: #selector(self.updateGain), userInfo: nil, repeats: true)
+        
+        reverb = AVAudioUnitReverb()
+        reverb.loadFactoryPreset(.largeHall)
+        reverb.wetDryMix = 100
+        
         self.audioEngine = AVAudioEngine.init()
         self.audioPlayerNode = AVAudioPlayerNode.init()
         self.audioUnitEQ = AVAudioUnitEQ(numberOfBands: 10)
         self.audioEngine.attach(self.audioPlayerNode)
         self.audioEngine.attach(self.audioUnitEQ)
+        self.audioEngine.attach(self.reverb)
         
-        for i in 1...10 {
-            let PASS = self.value(forKey: String(format: "Band%d", i)) as! UISlider
+        for i in 0...9 {
+            let PASS = self.value(forKey: String(format: "Band%d", i+1)) as! UISlider
             PASS.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi / 2)) //vertical position
             PASS.thumbTintColor = UIColor.red
-            //PASS.thu
         }
     }
     
     func setupEQ() { //Figure out where to implement this set up line!
         
-        for i in 1...10 {
+        for i in 0...9 {
 
-            let PASS_2 = self.value(forKey: String(format: "Band%d", i)) as! UISlider
+            let PASS_2 = self.value(forKey: String(format: "Band%d", i+1)) as! UISlider
             self.audioUnitEQ.bands[i].filterType =  .parametric
             self.audioUnitEQ.bands[i].frequency = frequencies[i]
             self.audioUnitEQ.bands[i].bandwidth = 0.5 // The smaller the bandwith, the higher the Q factor.
             self.audioUnitEQ.bands[i].gain = PASS_2.value
-            self.audioUnitEQ.bands[i].gain = PASS_2.value
             self.audioUnitEQ.bands[i].bypass = false
         }
-        audioUnitEQ.bypass = bypassSwitch.isOn 
+        
+        self.audioPlayerNode.scheduleSegment(self.audioFile, startingFrame: 0, frameCount: AVAudioFrameCount(self.audioFile.length), at: nil, completionHandler: self.completed) //Change button when pressed.
+        
+        self.audioEngine.connect(self.audioPlayerNode, to: audioUnitEQ, format: self.audioFile.processingFormat)
+        self.audioEngine.connect(audioUnitEQ, to: self.audioEngine.mainMixerNode, format: self.audioFile.processingFormat)
+        
+        let SR = 44100.0
+        let format = self.audioEngine.mainMixerNode.outputFormat(forBus: 0)
+        self.audioEngine.mainMixerNode.installTap(onBus: 0, bufferSize: AVAudioFrameCount(SR), format: format, block:{ (buffer: AVAudioPCMBuffer!, time: AVAudioTime!) -> Void in
+        })
+        
+        start()
+        //audioUnitEQ.bypass = bypassSwitch.isOn 
     }
     
     @objc func updateMeter() {
         DispatchQueue.main.async {
             self.dBlabel.text =  String(format: "%.2f dB", self.AudiorRecorder.volume)
+        }
+    }
+    
+    @objc func updateGain() {
+        
+        for i in 0...9 {
+        
+            let PASS_2 = self.value(forKey: String(format: "Band%d", i+1)) as! UISlider
+            self.audioUnitEQ.bands[i].gain = PASS_2.value
         }
     }
 
@@ -145,8 +174,8 @@ class FirstViewController: UIViewController {
     }
     
     @IBAction func restart (_ sender: Any){
-        for i in 1...10{
-            let band_restart = self.value(forKey: String(format: "Band%d", i)) as! UISlider
+        for i in 0...9{
+            let band_restart = self.value(forKey: String(format: "Band%d", i+1)) as! UISlider
             band_restart.value = 0
             }
         
@@ -164,16 +193,14 @@ class FirstViewController: UIViewController {
     
     @IBAction func play(_ sender: UIButton) {
         if (!isPlaying) {
+            setupEQ()
             self.audioPlay()
             sender.setTitle("Stop", for: .normal)
-            print("Playing...")
         } else {
             self.audioStop()
             sender.setTitle("Play", for: .normal)
-            print("Stopped")
         }
     }
-    
     
     func record(){
         AudiorRecorder.record()
@@ -183,31 +210,40 @@ class FirstViewController: UIViewController {
     
     func stopRec(){
         AudiorRecorder.stop()
-        print(AudiorRecorder.fileURL.absoluteString)
-        audioPlayer.setupSession()
-        audioPlayer.setup(fileURL: AudiorRecorder.fileURL)
-        //Failed to initialize AVAudioPlayer
+        self.audioFile = try! AVAudioFile(forReading: URL(fileURLWithPath: AudiorRecorder.fileURL.deletingPathExtension().path+".wav")) //Concise refference
     }
     
-    
-    func audioPlay() {
+    func audioPlay() { //Build this whole thing in a separate class file.
         self.isPlaying = true
-        audioPlayer.play()
+        
+        self.audioPlayerNode.scheduleSegment(self.audioFile, startingFrame: 0, frameCount: AVAudioFrameCount(self.audioFile.length), at: nil, completionHandler: self.completed)
+        
+        self.audioPlayerNode.play()
     }
 
-    func completion() {
-        if self.isPlaying {
-            DispatchQueue.main.async {
-                self.play(self.playStop)
-            }
+    
+    func start(){
+        if audioEngine.isRunning {
+            return
+        }
+        do {
+            try audioEngine.start()
+        }catch{
+            print("Could not start the Audio Engine")
+        }
+    }
+    
+    func completed() {
+        if isPlaying {
+            print("Completed")
+            self.audioPlay()
         }
     }
     
     func audioStop() {
         self.isPlaying = false
-        audioPlayer.stop()
-//        self.audioPlayerNode.stop()
-//        self.audioEngine.stop()
-//        self.audioEngine.mainMixerNode.removeTap(onBus: 0)
+        self.audioPlayerNode.stop()
+        self.audioEngine.stop()
+        self.audioEngine.mainMixerNode.removeTap(onBus: 0)
     }
 }

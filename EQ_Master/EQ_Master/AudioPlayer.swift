@@ -10,7 +10,7 @@ import Foundation
 import AVFoundation
 
 class AudioPlayer: NSObject {
-    
+
     var player:AVAudioPlayer!
     
     func setup(fileURL:URL){
@@ -48,6 +48,9 @@ class AudioPlayer: NSObject {
     func play(){
         if(player != nil && !player.isPlaying){
             player.play()
+            
+            
+            
         }
         else {
             print("AVAudioPlayer is nil or busy")
