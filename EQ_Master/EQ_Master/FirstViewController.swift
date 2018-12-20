@@ -13,16 +13,7 @@ import MediaPlayer
 import AVFoundation
 
 class FirstViewController: UIViewController {
-    
-    //General Stuff
-    var audioEngine: AVAudioEngine!
-    var audioPlayerNode: AVAudioPlayerNode!
-    var audioFile: AVAudioFile!
-    var audioUnitEQ = AVAudioUnitEQ(numberOfBands: 10)
-    var isPlaying = false
-    
-    var reverb : AVAudioUnitReverb! //Testing purposes
-    
+
     //EQ main buttons
     @IBOutlet var bypassSwitch : UISwitch!
     @IBOutlet var gainSlider : UISlider!
@@ -35,7 +26,14 @@ class FirstViewController: UIViewController {
     
     //band Frequencies
     let frequencies: [Float] = [31.25, 62.5, 125, 250, 500, 1000, 2000, 4000, 8000, 16000]
-
+    
+    //General Stuff
+    var audioEngine: AVAudioEngine!
+    var audioPlayerNode: AVAudioPlayerNode!
+    var audioFile: AVAudioFile!
+    var audioUnitEQ = AVAudioUnitEQ(numberOfBands: 10)
+    var isPlaying = false
+    
     //All sliders
     @IBOutlet var Band1 : UISlider!
     @IBOutlet var Band2 : UISlider!
@@ -65,27 +63,20 @@ class FirstViewController: UIViewController {
     
     //Audio
     var AudiorRecorder: AudioRecorder!
-    var timer: Timer!
-    var filter_timer: Timer!
+    private var timer: Timer!
+    private var filter_timer: Timer!
     private var volume = 0.0
+
+    var Player = AVAudioPlayer()
     
     @IBOutlet var dBlabel : UILabel!
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         AudiorRecorder = AudioRecorder()
-
         
         filter_timer = Timer.scheduledTimer(timeInterval: 1/30, target: self, selector: #selector(self.updateGain), userInfo: nil, repeats: true)
-        
-        //Audio engine testing purposes
-        self.audioEngine.attach(self.reverb)
-        reverb = AVAudioUnitReverb()
-        reverb.loadFactoryPreset(.largeHall)
-        reverb.wetDryMix = 100
-        //Up to here
         
         self.audioEngine = AVAudioEngine.init()
         self.audioPlayerNode = AVAudioPlayerNode.init()
@@ -93,7 +84,6 @@ class FirstViewController: UIViewController {
         self.audioEngine.attach(self.audioPlayerNode)
         self.audioEngine.attach(self.audioUnitEQ)
 
-        
         for i in 0...9 {
             let PASS = self.value(forKey: String(format: "Band%d", i+1)) as! UISlider
             PASS.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi / 2)) //vertical position
@@ -106,19 +96,20 @@ class FirstViewController: UIViewController {
         for i in 0...9 {
 
             let PASS_2 = self.value(forKey: String(format: "Band%d", i+1)) as! UISlider
-            self.audioUnitEQ.bands[i].filterType =  .parametric
+            self.audioUnitEQ.bands[i].filterType =  .parametric //bandpass does not work properly.
             self.audioUnitEQ.bands[i].frequency = frequencies[i]
-            self.audioUnitEQ.bands[i].bandwidth = 0.5 // The smaller the bandwith, the higher the Q factor.
+            self.audioUnitEQ.bands[i].bandwidth = 0.8 // The smaller the bandwith, the higher the Q factor.
             self.audioUnitEQ.bands[i].gain = PASS_2.value
             self.audioUnitEQ.bands[i].bypass = false
         }
+        
+        let SR = 44100.0
         
         self.audioPlayerNode.scheduleSegment(self.audioFile, startingFrame: 0, frameCount: AVAudioFrameCount(self.audioFile.length), at: nil, completionHandler: self.completed) //Change button when pressed.
         
         self.audioEngine.connect(self.audioPlayerNode, to: audioUnitEQ, format: self.audioFile.processingFormat)
         self.audioEngine.connect(audioUnitEQ, to: self.audioEngine.mainMixerNode, format: self.audioFile.processingFormat)
         
-        let SR = 44100.0
         let format = self.audioEngine.mainMixerNode.outputFormat(forBus: 0)
         self.audioEngine.mainMixerNode.installTap(onBus: 0, bufferSize: AVAudioFrameCount(SR), format: format, block:{ (buffer: AVAudioPCMBuffer!, time: AVAudioTime!) -> Void in
         })
@@ -167,7 +158,7 @@ class FirstViewController: UIViewController {
         if sender.isOn == true {
             record()
         }else{
-            stopRec()
+            stopRec() //From here these are the problematic lines of code. Saving the info nowhere!
         }
     }
     
@@ -185,10 +176,7 @@ class FirstViewController: UIViewController {
         gainLabel.text = "0.5 dB"
         
         }
-    
-        //Add everything else!
-    //}
-    
+
     @IBAction func play(_ sender: UIButton) {
         if (!isPlaying) {
             setupEQ()
@@ -203,7 +191,6 @@ class FirstViewController: UIViewController {
     func record(){
         AudiorRecorder.record()
         timer = Timer.scheduledTimer(timeInterval: 1/30, target: self, selector: #selector(self.updateMeter), userInfo: nil, repeats: true)
-        print("Recording...")
     }
     
     func stopRec(){
@@ -214,12 +201,11 @@ class FirstViewController: UIViewController {
     func audioPlay() { //Build this whole thing in a separate class file.
         self.isPlaying = true
         
-        self.audioPlayerNode.scheduleSegment(self.audioFile, startingFrame: 0, frameCount: AVAudioFrameCount(self.audioFile.length), at: nil, completionHandler: self.completed)
+        self.audioPlayerNode.scheduleSegment(self.audioFile, startingFrame: 0, frameCount: AVAudioFrameCount(self.audioFile.length), at: nil, completionHandler: self.completed) //Will allow loop.
         
         self.audioPlayerNode.play()
     }
 
-    
     func start(){
         if audioEngine.isRunning {
             return
@@ -233,7 +219,6 @@ class FirstViewController: UIViewController {
     
     func completed() {
         if isPlaying {
-            print("Completed")
             self.audioPlay()
         }
     }

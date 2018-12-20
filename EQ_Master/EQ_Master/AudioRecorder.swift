@@ -14,7 +14,7 @@ class AudioRecorder: NSObject {
     var recorder:AVAudioRecorder!
     var fileURL:URL!
     private var timer:Timer!
-    private var curTime = ""
+    var curTime = ""
     var volume = 0.0
     
     func setup(){

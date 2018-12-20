@@ -143,7 +143,7 @@
                                     <action selector="bandGain:" destination="9pv-A4-QxB" eventType="valueChanged" id="d4r-92-2ff"/>
                                 </connections>
                             </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-94" maxValue="94" translatesAutoresizingMaskIntoConstraints="NO" id="94Z-dj-jT2">
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-24" maxValue="24" translatesAutoresizingMaskIntoConstraints="NO" id="94Z-dj-jT2">
                                 <rect key="frame" x="698" y="326" width="354" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
